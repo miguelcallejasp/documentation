@@ -61,11 +61,15 @@ First, grant priviliges to connections on mysql database
 
 Change password
 ```
-mysql> use mysql;
-update user set password=PASSWORD("control123!") where User='root';
-update user set authentication_string=password('control123!') where user='root';
+mysql>
+update mysql.user set password=PASSWORD("control123!") where User='root';
+update mysql.user set authentication_string=password('control123!') where user='root';
 ```
-
+Newer versions require this command:
+```
+mysql>
+SET PASSWORD = PASSWORD('m0j1xInc1!');
+```
 # MySQL CLIENT
 
 Installing MySQL on CentOS 6
@@ -100,6 +104,19 @@ enabled=1
 ```
 `yum install mongodb-org mongodb-org-server mongodb-org-shell mongodb-org-mongos mongodb-org-tools`
 
+Or you can install 3.4
+
+`vim /etc/yum.repos.d/mongodb-org-3.4.repo`
+```
+[mongodb-org-3.4]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.2/x86_64/
+gpgcheck=0
+enabled=1
+```
+`yum install mongodb-org mongodb-org-server mongodb-org-shell mongodb-org-mongos mongodb-org-tools`
+
+
 `service mongod start`
 ```
 mongo
@@ -121,6 +138,16 @@ this script assumes all options are in the config file.
 CONFIGFILE="/etc/mongod.conf"
 OPTIONS=" -f $CONFIGFILE --auth"
 ```
+
+On Mongo 3.4 the security is added here:
+
+`/etc/mongod.conf`
+```
+security:
+	authorization: enabled
+```
+
+
 then restart systemctl
 
 `systemctl daemon-reload`
@@ -164,12 +191,12 @@ enabled=1
 
 Create LOG File
 ```
-$mkdir -p /var/log/mosquitto
-$touch /var/log/mosquitto/mosquitto.log chown -R mosquitto: /var/log/mosquitto
+mkdir -p /var/log/mosquitto
+touch /var/log/mosquitto/mosquitto.log chown -R mosquitto: /var/log/mosquitto
 ```
 Edit the mosquitto.conf file
 
-`$vim /etc/mosquitto/mosquitto.conf`
+`vim /etc/mosquitto/mosquitto.conf`
 
 Add the following content at the end of the file:
 ```
@@ -187,8 +214,11 @@ REPOLIST FOR CENTOS 7
 `sudo wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm &&
 sudo rpm -ivh epel-release-7-9.noarch.rpm`
 
+Updated link redirects here
+`sudo wget http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm && sudo rpm -ivh epel-release-7-11.noarch.rpm`
+
 EPEL Repo
-`$vim /etc/yum.repos.d/epel.repo`
+`vim /etc/yum.repos.d/epel.repo`
 ```
 [epel]
 name=Extra Packages for Enterprise Linux 7 - $basearch
@@ -198,8 +228,7 @@ failovermethod=priority
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-```
-```
+
 [epel-debuginfo]
 name=Extra Packages for Enterprise Linux 7 - $basearch - Debug
 #baseurl=http://download.fedoraproject.org/pub/epel/7/$basearch/debug
@@ -208,8 +237,7 @@ failovermethod=priority
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 gpgcheck=1
-```
-```
+
 [epel-source]
 name=Extra Packages for Enterprise Linux 7 - $basearch - Source
 #baseurl=http://download.fedoraproject.org/pub/epel/7/SRPMS
@@ -220,7 +248,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 gpgcheck=1
 ```
 Test using
-`$yum repolist`
+`yum repolist`
 
 REPOLIST FOR CENTOS 6
 
@@ -234,13 +262,15 @@ Install version 7
 
 Add this configuration on /etc/tomcat/tomcat.conf
 `JAVA_OPTS="-Xmx2048m -Xms512m"`
+
 To startup
 `chkconfig tomcat on`
 `service tomcat restart`
 
 Start httpd
-`$yum install httpd`
-`$service httpd start`
+`yum install httpd`
+
+`service httpd start`
 
 #change file `vi /etc/tomcat/server.xml`
 ```
@@ -268,8 +298,8 @@ Proxy configuration
 VIZIX 4
 Add repositories
 ```
-$vim /etc/yum.repos.d/vizix4.repo
-$vim /etc/yum.repos.d/vizix5.repo
+vim /etc/yum.repos.d/vizix4.repo
+vim /etc/yum.repos.d/vizix5.repo
 ```
 ```
 [vizix4]
@@ -279,8 +309,8 @@ baseurl=http://customers:v1z1xr3p0axxe55@vizixrepo.mojix.com/ViZix/main/4
 gpgcheck=0
 enabled=0
 ```
-`$yum install vizix-services-4.5.0 vizix-alebridge-4.5.0 vizix-corebridge-4.5.0 vizix-ui-4.5.0 vizix-simulator-4.5.0 --enablerepo=vizix4`
-`$yum remove vizix-services-4.5.0 vizix-alebridge-4.5.0 vizix-corebridge-4.5.0 vizix-ui-4.5.0 vizix-simulator-4.5.0 --enablerepo=vizix4`
+`yum install vizix-services-4.5.0 vizix-alebridge-4.5.0 vizix-corebridge-4.5.0 vizix-ui-4.5.0 vizix-simulator-4.5.0 --enablerepo=vizix4`
+`yum remove vizix-services-4.5.0 vizix-alebridge-4.5.0 vizix-corebridge-4.5.0 vizix-ui-4.5.0 vizix-simulator-4.5.0 --enablerepo=vizix4`
 
 `yum install vizix-services-5.0.0_RC09 vizix-alebridge-5.0.0_RC09 vizix-corebridge-5.0.0_RC09 vizix-ui-5.0.0_RC09 vizix-simulator-5.0.0_RC09 --enablerepo=vizix5`
 
